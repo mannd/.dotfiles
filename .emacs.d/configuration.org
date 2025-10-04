@@ -3,13 +3,13 @@
 * Introduction
 This is my new /literate/ Emacs configuration file.
 
-** Default coding system
+* Default coding system
 
 #+BEGIN_SRC emacs-lisp
   (set-default-coding-systems 'utf-8)	
 #+END_SRC
 
-** Personal Information
+* Personal Information
 
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "David Mann, MD"
@@ -24,7 +24,7 @@ This is my new /literate/ Emacs configuration file.
   (setq calendar-location-name "Parker, CO")
 #+END_SRC
 
-** Configure =use-package=
+* Configure =use-package=
 
 ~use-package~ is now part of emacs core, so no need to install it.
 
@@ -49,7 +49,7 @@ This is my new /literate/ Emacs configuration file.
       ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
-** Custom file
+* Custom file
 
 Customizations get stored in their own file.  I have arranged this so that there is a separate init.el and configuration.org for Mac and Windows.  I considered pointing init.el to the same file, but thought it best to separate the two systems, other than certain shared files like the org files.
 
@@ -63,14 +63,14 @@ Customizations get stored in their own file.  I have arranged this so that there
   (load custom-file 'noerror)
 #+END_SRC
 
-** Define function key as hyper
+* Define function key as hyper
 Not sure if this only applies to macOS?
 
 #+BEGIN_SRC emacs-lisp
     (setq ns-function-modifier 'hyper)
 #+END_SRC
 
-** Windmove
+* Windmove
 However S-<arrow> conflicts with calendar in org-mode.  So use the super key (Command in macOS) but only in macOS.  Windows uses the Windows key for other functions, so just don't use windmove with Windows.
 
 #+BEGIN_SRC emacs-lisp
@@ -80,7 +80,7 @@ However S-<arrow> conflicts with calendar in org-mode.  So use the super key (Co
   (global-set-key (kbd "C-x C-p") 'previous-multiframe-window)
 #+END_SRC
 
-** Printing
+* Printing
 
 Printing is only set up for mac.
 
@@ -93,7 +93,7 @@ Printing is only set up for mac.
         ;; (global-set-key (kbd "M-p") 'mac-print-buffer)))
 #+END_SRC
 
-** Get path right, takes it from the shell
+* Get path right, takes it from the shell
 Only used in macOS?
 
 #+BEGIN_SRC emacs-lisp
@@ -110,8 +110,8 @@ Only used in macOS?
  
 #+END_SRC
 
-** Org mode
-*** Setup org mode
+* Org mode
+** Setup org mode
 Set some global keys for org mode, set up my default org directory and tweak the appearance of org mode.
 
 #+BEGIN_SRC emacs-lisp
@@ -138,9 +138,9 @@ Set some global keys for org mode, set up my default org directory and tweak the
      :hook (org-mode . org-appear-mode))
 #+END_SRC
 
-**** TODO Consider moving org files to iCloud
+*** TODO Consider moving org files to iCloud
 
-**** Citar-denote
+*** Citar-denote
 
 #+BEGIN_SRC emacs-lisp
   (use-package citar-denote
@@ -150,7 +150,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
     (citar-denote-mode))
 #+END_SRC
 
-*** Org agenda
+** Org agenda
 
 Set up the org agenda.
 
@@ -182,7 +182,7 @@ Set up the org agenda.
   (setq org-icalendar-include-todo t)
 #+END_SRC
 
-*** More org stuff
+** More org stuff
 
 #+BEGIN_SRC emacs-lisp
   ;;(add-to-list 'load-path "~/.emacs.d/elisp/emacs-ob-racket-master")
@@ -258,28 +258,28 @@ Set up the org agenda.
   (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil)))
 #+END_SRC
 
-*** org-bullets
+** org-bullets
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-bullets
 :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
-*** Have org capture use latin-9 input
+** Have org capture use latin-9 input
 This allows accented characters to be use.
 
 #+BEGIN_SRC emacs-lisp
   (setq default-input-method "latin-9-prefix")
 #+END_SRC
 
-*** Images
+** Images
 Note that this requires emacs build with imagemagick.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-image-actual-width nil)
 #+END_SRC
 
-** Ediff
+* Ediff
 Make ediff default to a better layout.
 
 #+begin_src emacs-lisp
@@ -287,7 +287,7 @@ Make ediff default to a better layout.
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 #+end_src
 
-** Emacs server
+* Emacs server
 
 #+BEGIN_SRC emacs-lisp
   ;; problem with emacsclient was invoking wrong emacsclient
@@ -303,9 +303,9 @@ Make ediff default to a better layout.
     (server-start))
 #+END_SRC
 
-*** TODO See if setenv "EDITOR" can be used for Windows, or if it is even needed.
+** TODO See if setenv "EDITOR" can be used for Windows, or if it is even needed.
 
-** Flycheck
+* Flycheck
 
 #+BEGIN_SRC emacs-lisp
   ;; flycheck
@@ -324,10 +324,10 @@ Make ediff default to a better layout.
     (eval-after-load 'flycheck '(flycheck-swift-setup)))
 #+END_SRC
 
-*** TODO Change to Flymake/Eglot see https://joaotavora.github.io/eglot/#Quick-Start
+** TODO Change to Flymake/Eglot see https://joaotavora.github.io/eglot/#Quick-Start
 Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankruptcy.html
 
-** Evil mode
+* Evil mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -397,7 +397,7 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 
 #+END_SRC
 
-** Dired
+* Dired
 Tweak dired.  
 
 #+BEGIN_SRC emacs-lisp
@@ -416,7 +416,7 @@ Tweak dired.
   (add-hook 'dired-mode #'dired-hide-details-mode))
 #+END_SRC
 
-** Magit
+* Magit
 Install Magit from nongnu repository using package manager.
 
 #+BEGIN_SRC emacs-lisp
@@ -432,7 +432,7 @@ Install Magit from nongnu repository using package manager.
     (global-set-key (kbd "C-x g") 'magit-status)
 #+END_SRC
 
-** TODO fix paths for windows Register shortcuts
+* TODO fix paths for windows Register shortcuts
 
 #+BEGIN_SRC emacs-lisp
   ;; provide shortcut registers to files
@@ -440,7 +440,7 @@ Install Magit from nongnu repository using package manager.
   (set-register ?c '(file . "~/.emacs.d/configuration.org"))
 #+END_SRC
 
-** Themes
+* Themes
 I am satisfied with the modus themes, but many doom themes are good, as well as others.  In addition, https://protesilaos.com/ has standard-themes and ef-themes, which seem pretty nice too.
 
 #+BEGIN_SRC emacs-lisp
@@ -476,7 +476,7 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   (doom-modeline-major-mode-color-icon t))
 #+END_SRC
 
-** Nerd icons
+* Nerd icons
 
 #+begin_src emacs-lisp
   (use-package nerd-icons
@@ -494,7 +494,7 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   (dired-mode . nerd-icons-dired-mode))
 #+end_src
 
-** Tweak UI
+* Tweak UI
 
 Dump the toolbar and scrollbars, but keep the menu for discovery purposes, though I rarely look at it.
 
@@ -575,7 +575,7 @@ Make title fancier.
 (setq-default frame-title-format '("Emacs - " user-login-name "@" system-name " - %b"))
 #+END_SRC
 
-** Winner mode
+* Winner mode
 Undo and redo window configuration changes
 
 #+BEGIN_SRC emacs-lisp
@@ -583,7 +583,7 @@ Undo and redo window configuration changes
     (winner-mode 1))
 #+END_SRC
 
-** Beacon mode
+* Beacon mode
 Flashes cursor when scrolling or changing buffers
 
 #+BEGIN_SRC emacs-lisp
@@ -592,7 +592,7 @@ Flashes cursor when scrolling or changing buffers
     :config (beacon-mode 1))
 #+END_SRC
 
-** Rainbow mode
+* Rainbow mode
 Colorizes strings that represent colors.
 
 #+BEGIN_SRC emacs-lisp
@@ -601,16 +601,16 @@ Colorizes strings that represent colors.
      (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 
-** Deleted files go to trash
+* Deleted files go to trash
 
 #+BEGIN_SRC emacs-lisp
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash")
 #+END_SRC
 
-*** TODO do same for Windows
+** TODO do same for Windows
 
-** Encryption
+* Encryption
 
 Enable encryption of gpg files
 
@@ -620,7 +620,7 @@ Enable encryption of gpg files
   ;; (epa-file-enable))
 #+END_SRC
 
-** Markdown mode
+* Markdown mode
 Note that we use auto-fill-mode with Markdown.
 
 #+BEGIN_SRC emacs-lisp
@@ -635,7 +635,7 @@ Note that we use auto-fill-mode with Markdown.
     (electric-quote-mode -1))
 #+END_SRC
 
-** Ledger
+* Ledger
 
 #+BEGIN_SRC emacs-lisp
       (use-package ledger-mode
@@ -671,7 +671,7 @@ Note that we use auto-fill-mode with Markdown.
         (add-hook 'ledger-mode-hook #'evil-ledger-mode))
 #+END_SRC
 
-** Epub
+* Epub
 Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
 
 #+BEGIN_SRC emacs-lisp
@@ -680,7 +680,7 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 #+END_SRC
 
-** Vertico and friends
+* Vertico and friends
 #+BEGIN_SRC emacs-lisp
   (use-package vertico
     :config
@@ -710,7 +710,7 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
 
 #+END_SRC
 
-** Consult-notes
+* Consult-notes
 Combine org-roam and denote notes
 
 #+begin_src emacs-lisp
@@ -723,9 +723,9 @@ Combine org-roam and denote notes
 
 #+end_src
 
-** Helm - replaced by Vertico and friends, except for helm-bibtex.
+* Helm - replaced by Vertico and friends, except for helm-bibtex.
 
-** Projectile - Trying out built-in Project mode, so temporarily disabled
+* Projectile - Trying out built-in Project mode, so temporarily disabled
 
 #+BEGIN_SRC emacs-lisp
   ;; projectile
@@ -737,10 +737,10 @@ Combine org-roam and denote notes
     (projectile-mode +1))
 #+END_SRC
 
-** Auto-complete
+* Auto-complete
 We are using company mode instead of auto-complete for now.
 
-** Misc packages
+* Misc packages
 
 #+BEGIN_SRC emacs-lisp
   ;; some other packages
@@ -754,15 +754,15 @@ We are using company mode instead of auto-complete for now.
     :load-path "elisp/")
 #+END_SRC
 
-** Programming
-*** General
+* Programming
+** General
 
 #+BEGIN_SRC emacs-lisp
   ;; compile buffer scrolls
   (setq compilation-scroll-output t)
 #+END_SRC
 
-*** Clojure
+** Clojure
 
 #+BEGIN_SRC emacs-lisp
   ;; Clojure stuff taken from https://github.com/flyingmachine/emacs-for-clojure/blob/master/init.el
@@ -780,7 +780,7 @@ We are using company mode instead of auto-complete for now.
       (package-install p)))
 #+END_SRC
 
-*** Lisp
+** Lisp
 
 #+BEGIN_SRC emacs-lisp
   ;; MIT-Scheme
@@ -791,14 +791,14 @@ We are using company mode instead of auto-complete for now.
   (setq inferior-lisp-program "clisp")
 #+END_SRC
 
-*** Racket
+** Racket
 Use as a dialect of Scheme compatible with the book SICP.  See https://github.com/hasu/emacs-ob-racket for installation of emacs-ob-racket.  Code is downloaded from that site and is in the elisp subdirectory of .emacs.d/
 
 #+begin_src  emacs-lisp
 ;;  (use-package racket-mode)
 #+end_src
 
-*** Swift
+** Swift
 
 #+BEGIN_SRC emacs-lisp
     (use-package swift-mode)
@@ -859,7 +859,7 @@ Use as a dialect of Scheme compatible with the book SICP.  See https://github.co
 
 
 #+END_SRC
-*** Company mode
+** Company mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package company
@@ -882,7 +882,7 @@ Use as a dialect of Scheme compatible with the book SICP.  See https://github.co
   (setq company-after-completion-hook #'my-company-after-completion-hook)
 #+END_SRC
 
-** Org-roam
+* Org-roam
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
@@ -918,7 +918,7 @@ Use as a dialect of Scheme compatible with the book SICP.  See https://github.co
     :no-require)
 #+END_SRC
 
-** Denote
+* Denote
 An alternative to org-roam
 
 #+begin_src emacs-lisp
@@ -935,13 +935,13 @@ An alternative to org-roam
 
 #+end_src
 
-** Kotlin
+* Kotlin
 
 #+BEGIN_SRC emacs-lisp
   (use-package kotlin-mode)
 #+END_SRC
   
-** TODO Citar - set up for Windows too
+* TODO Citar - set up for Windows too
 
 #+BEGIN_SRC emacs-lisp
   (use-package citar
@@ -964,7 +964,7 @@ An alternative to org-roam
   ;;   :config (citar-org-roam-mode))
   #+END_SRC
 
-** Helm-bibtex
+* Helm-bibtex
 
 #+BEGIN_SRC emacs-lisp
   (use-package helm-bibtex
@@ -977,7 +977,7 @@ An alternative to org-roam
     (setq bibtex-completion-pdf-field "File"))
 #+END_SRC
 
-** Org-roam-bibtex
+* Org-roam-bibtex
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-bibtex
     :if (eq system-type 'darwin)
@@ -988,7 +988,7 @@ An alternative to org-roam
     (setq orb-attached-file-extensions '("pdf" "epub")))
 #+END_SRC
 
-** PDF tools
+* PDF tools
 #+BEGIN_SRC emacs-lisp
 (use-package ctrlf
   :ensure t
