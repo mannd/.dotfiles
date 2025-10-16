@@ -120,13 +120,13 @@
      "#94BFF3" "#DC8CC3"))
  '(objed-cursor-color "#D16969")
  '(package-selected-packages
-   '(ack all-the-icons-dired anything auctex auto-compile auto-complete
-	 bbdb beacon calfw calfw-org cargo casual celestial-mode-line
-	 challenger-deep-theme cider citar-denote citar-org-roam
-	 clojure-mode-extra-font-locking color-theme
+   '(ack adaptive-wrap all-the-icons-dired anything auctex auto-compile
+	 auto-complete bbdb beacon calfw calfw-org cargo casual
+	 celestial-mode-line challenger-deep-theme cider citar-denote
+	 citar-org-roam clojure-mode-extra-font-locking color-theme
 	 color-theme-modern color-theme-sanityinc-tomorrow company-box
 	 company-sourcekit consult-denote consult-notes ctrlf diminish
-	 doom-modeline doom-themes doric-themes dracula-theme
+	 djvu doom-modeline doom-themes doric-themes dracula-theme
 	 ef-themes evil-collection evil-ledger evil-matchit
 	 evil-numbers evil-org exec-path-from-shell flycheck-ledger
 	 flycheck-swift forecast frame-cmds geiser ghub golden-ratio
@@ -140,8 +140,8 @@
 	 rainbow-delimiters rainbow-mode rust-mode rvm selectric-mode
 	 smex spaceline spacious-padding standard-themes swift-mode
 	 tagedit treemacs-icons-dired undo-fu undo-tree vertico
-	 workgroups xcode-mode yaml-mode yasnippet zenburn-theme
-	 zetteldeft))
+	 visual-fill-column workgroups xcode-mode yaml-mode yasnippet
+	 zenburn-theme zetteldeft))
  '(safe-local-variable-values
    '((eval activate-input-method 'french-prefix)
      (eval activate-input-method 'latin-4-postfix)
