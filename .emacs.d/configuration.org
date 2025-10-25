@@ -63,6 +63,24 @@ Customizations get stored in their own file.  I have arranged this so that there
   (load custom-file 'noerror)
 #+END_SRC
 
+* Start Emacs server automatically
+
+#+BEGIN_SRC emacs-lisp
+  ;; Start Emacs server if not already running
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+
+  ;; Automatically kill buffers opened by emacsclient, but only if unmodified
+  (setq server-kill-new-buffers t)
+
+  ;; Keep the usual save-confirmation behavior
+  (setq server-kill-buffer-query-function 'server-kill-buffer-query-function)
+
+  ;; Ensure we do NOT disable save prompts
+  ;; (so don't remove server-kill-buffer-query-function from hooks)
+#+END_SRC
+
 * Define function key as hyper
 Not sure if this only applies to macOS?
 
