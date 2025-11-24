@@ -742,20 +742,6 @@ Combine org-roam and denote notes
 
 #+end_src
 
-* Helm - replaced by Vertico and friends, except for helm-bibtex.
-
-* Projectile - Trying out built-in Project mode, so temporarily disabled
-
-#+BEGIN_SRC emacs-lisp
-  ;; projectile
-  (use-package projectile
-    :disabled
-    :ensure t
-    :config
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (projectile-mode +1))
-#+END_SRC
-
 * Auto-complete
 We are using company mode instead of auto-complete for now.
 
