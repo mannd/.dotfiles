@@ -8,7 +8,8 @@
  '(canlock-password "f2adf01a9191e9787b0182f97eae18d118ae43d9")
  '(citar-denote-title-format "author-year-title")
  '(custom-safe-themes
-   '("e36b78ef2b29a76c8487061af440de56e2b8481e6c9ef8cdc2a72cfd9d2475d2"
+   '("fff0dc54ff5a194ba6593d1cce0fbb4fe8cf9da59fcef47f9e06dec6ef11b1fa"
+     "e36b78ef2b29a76c8487061af440de56e2b8481e6c9ef8cdc2a72cfd9d2475d2"
      "6bf350570e023cd6e5b4337a6571c0325cec3f575963ac7de6832803df4d210a"
      "f3ff199c686079630ec5e637b3a43d31066263c21daac4556fe142ef743c8654"
      "fea8f3bd01d0f4e63dc0e6eddd699753e1b6abcd7ec4c9e4fe55efbb2d3f04d5"
@@ -122,7 +123,7 @@
  '(objed-cursor-color "#D16969")
  '(package-selected-packages
    '(ack adaptive-wrap all-the-icons-dired anything auctex auto-compile
-	 auto-complete bbdb beacon calfw calfw-org cargo casual
+	 auto-complete bbdb beacon calfw-org cargo casual
 	 celestial-mode-line challenger-deep-theme cider citar-denote
 	 citar-org-roam clojure-mode-extra-font-locking color-theme
 	 color-theme-modern color-theme-sanityinc-tomorrow company-box
@@ -134,12 +135,12 @@
 	 frame-cmds geiser ghub golden-ratio graphviz-dot-mode
 	 helm-bibtex helm-projectile iedit imenu-list js3-mode
 	 kosmos-theme kotlin-mode leuven-theme litable magit-gitflow
-	 magit-todos marginalia modus-themes nerd-icons-completion
-	 nerd-icons-dired nov olivetti orderless org-appear org-brain
-	 org-bullets org-d20 org-drill org-pdftools org-pomodoro
-	 org-ql org-ref org-roam-bibtex org-roam-ui org2blog ox-epub
-	 paredit parrot racket-mode rainbow-delimiters rainbow-mode
-	 rust-mode rvm selectric-mode smex spaceline spacious-padding
+	 marginalia nerd-icons-completion nerd-icons-dired nov
+	 olivetti orderless org-appear org-brain org-bullets org-d20
+	 org-drill org-pdftools org-pomodoro org-ql org-ref
+	 org-roam-bibtex org-roam-ui org2blog ox-epub paredit parrot
+	 racket-mode rainbow-delimiters rainbow-mode rust-mode rvm
+	 selectric-mode smex spaceline spacious-padding
 	 standard-themes swift-mode tagedit treemacs-icons-dired
 	 undo-fu undo-tree vertico visual-fill-column workgroups
 	 xcode-mode yaml-mode yasnippet zenburn-theme zetteldeft))
