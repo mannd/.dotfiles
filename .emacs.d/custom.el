@@ -128,7 +128,7 @@
 	 citar-org-roam clojure-mode-extra-font-locking color-theme
 	 color-theme-modern color-theme-sanityinc-tomorrow company-box
 	 company-sourcekit consult-denote consult-notes ctrlf diminish
-	 djvu doom-modeline doom-themes doric-themes dracula-theme
+	 djvu doom-modeline doom-themes doric-themes dracula-theme eat
 	 ef-themes evil-collection evil-ledger evil-matchit
 	 evil-numbers evil-org exec-path-from-shell flycheck-ledger
 	 flycheck-swift flymake-flycheck flymake-hledger forecast

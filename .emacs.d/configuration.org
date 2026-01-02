@@ -32,21 +32,21 @@ This is my new /literate/ Emacs configuration file.
   (use-package ert)
   (use-package diminish)
   (use-package bind-key)
-    ;  (require 'ert)
-     ; (require 'diminish)
-     ; (require 'bind-key)
-      ;; Ensure all packages are loaded
-      (setq use-package-always-ensure t)
-      (setq use-package-verbose t)
-      ;; compile packages and use the newest version
-      (use-package auto-compile
-        :config (auto-compile-on-load-mode))
-      (setq load-prefer-newer t)
-      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  					;  (require 'ert)
+  					; (require 'diminish)
+  					; (require 'bind-key)
+  ;; Ensure all packages are loaded
+  (setq use-package-always-ensure t)
+  (setq use-package-verbose t)
+  ;; compile packages and use the newest version
+  (use-package auto-compile
+    :config (auto-compile-on-load-mode))
+  (setq load-prefer-newer t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 
-      ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-      ;; and `package-pinned-packages`. Most users will not need or want to do this.
-      ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+  ;; and `package-pinned-packages`. Most users will not need or want to do this.
+  ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 * Custom file
@@ -85,7 +85,7 @@ Customizations get stored in their own file.  I have arranged this so that there
 Not sure if this only applies to macOS?
 
 #+BEGIN_SRC emacs-lisp
-    (setq ns-function-modifier 'hyper)
+  (setq ns-function-modifier 'hyper)
 #+END_SRC
 
 * Windmove
@@ -93,7 +93,7 @@ However S-<arrow> conflicts with calendar in org-mode.  So use the super key (Co
 
 #+BEGIN_SRC emacs-lisp
   (if (eq system-type 'darwin) (windmove-default-keybindings 'super))
-  ; But also retain these old keybindings I am used to.
+  					; But also retain these old keybindings I am used to.
   (global-set-key (kbd "C-x C-n") 'other-window)
   (global-set-key (kbd "C-x C-p") 'previous-multiframe-window)
 #+END_SRC
@@ -104,28 +104,28 @@ Printing is only set up for mac.
 
 #+BEGIN_SRC emacs-lisp
   (if (eq system-type 'darwin)
-    (progn
+      (progn
         (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
         (when (require 'mac-print-mode nil t)
-        (mac-print-mode 1))))
-        ;; (global-set-key (kbd "M-p") 'mac-print-buffer)))
+  	(mac-print-mode 1))))
+  ;; (global-set-key (kbd "M-p") 'mac-print-buffer)))
 #+END_SRC
 
 * Get path right, takes it from the shell
 Only used in macOS?
 
 #+BEGIN_SRC emacs-lisp
-      ;; new and improved way to make PATH and exec-path match bash config
-      ;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
-      ;; it looks like it would prefer using .profile, so below I
-      ;; disable the error message that occurs.
-      (use-package exec-path-from-shell
-        :init
-        (setq exec-path-from-shell-check-startup-files nil)
-        :config
-        (when (memq window-system '(mac ns))
-          (exec-path-from-shell-initialize)))
- 
+  ;; new and improved way to make PATH and exec-path match bash config
+  ;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
+  ;; it looks like it would prefer using .profile, so below I
+  ;; disable the error message that occurs.
+  (use-package exec-path-from-shell
+    :init
+    (setq exec-path-from-shell-check-startup-files nil)
+    :config
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize)))
+
 #+END_SRC
 
 * Org mode
@@ -143,9 +143,9 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (setq org-agenda-include-diary t)
   ;; ~/org is a symlink to "~/Dropbox/org" for easy sharing
   (if (eq system-type 'darwin)
-    (setq org-directory "~/org"))
+      (setq org-directory "~/org"))
   (if (eq system-type 'windows-nt)
-    (setq org-directory "x:/org")) 
+      (setq org-directory "x:/org")) 
   (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
   ;; we hide stars by default even in buffers where we turn off
   (setq org-hide-leading-stars 'hidestars) ; just one star visible
@@ -153,7 +153,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (setq org-hide-emphasis-markers t)
 
   (use-package org-appear
-     :hook (org-mode . org-appear-mode))
+    :hook (org-mode . org-appear-mode))
 #+END_SRC
 
 *** TODO Consider moving org files to iCloud
@@ -213,7 +213,7 @@ Set up the org agenda.
      (js . t)
      (shell . t)
      (java . t)))
-  
+
   ;; file types for org-mode
   (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 
@@ -279,8 +279,8 @@ Set up the org agenda.
 ** org-bullets
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-bullets
-:config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (use-package org-bullets
+    :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
 ** Have org capture use latin-9 input
@@ -294,7 +294,7 @@ This allows accented characters to be use.
 Note that this requires emacs build with imagemagick.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-image-actual-width nil)
+  (setq org-image-actual-width nil)
 #+END_SRC
 
 * Ediff
@@ -312,7 +312,7 @@ Make ediff default to a better layout.
   ;; (/usr/bin/emacsclient)
   ;; make sure the emacslient appropriate to the Emacs I am using is used
   ;; (setenv "EDITOR" (expand-file-name "bin/emacsclient" invocation-directory))
-  
+
   ;; "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
 
   ;; set up emacs as server
@@ -335,8 +335,8 @@ Make ediff default to a better layout.
     (setq-default flycheck-emacs-lisp-load-path 'inherit)
     (global-flycheck-mode)
     (setq flycheck-global-modes '(not org-mode)))
-    ;;(define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
-    ;; flycheck-swift
+  ;;(define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
+  ;; flycheck-swift
   (use-package flycheck-swift
     :config
     (eval-after-load 'flycheck '(flycheck-swift-setup)))
@@ -387,11 +387,11 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
   ;; in these states that I end up switching to emacs mode.
   ;; Thus, disabled.
   (use-package evil-collection
-    :disabled
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
+    :disabled t
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init))
 
   ;; use evil-matchit to match tags
   (use-package evil-matchit
@@ -411,8 +411,8 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     (require 'evil-org-agenda)
     (add-hook 'org-mode-hook 'evil-org-mode)
     (add-hook 'evil-org-mode-hook
-          (lambda ()
-            (evil-org-set-key-theme)))
+              (lambda ()
+                (evil-org-set-key-theme)))
     (evil-org-agenda-set-keys))
 
 #+END_SRC
@@ -422,18 +422,18 @@ Tweak dired.
 
 #+BEGIN_SRC emacs-lisp
   (use-package dired
-  :ensure nil
-  :commands (dired)
-  :hook
-  ((dired-mode . dired-hide-details-mode)
-   (dired-mode . hl-line-mode))
-  :config
-  ;; (setq dired-recursive-copies 'always)
-  ;; (setq dired-recursive-deletes 'always)
-  ;; (setq delete-by-moving-to-trash t)
-  (setq dired-dwim-target t)
-  (put 'dired-find-alternate-file 'disabled nil)
-  (add-hook 'dired-mode #'dired-hide-details-mode))
+    :ensure nil
+    :commands (dired)
+    :hook
+    ((dired-mode . dired-hide-details-mode)
+     (dired-mode . hl-line-mode))
+    :config
+    ;; (setq dired-recursive-copies 'always)
+    ;; (setq dired-recursive-deletes 'always)
+    ;; (setq delete-by-moving-to-trash t)
+    (setq dired-dwim-target t)
+    (put 'dired-find-alternate-file 'disabled nil)
+    (add-hook 'dired-mode #'dired-hide-details-mode))
 #+END_SRC
 
 * Magit
@@ -484,28 +484,28 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   (use-package ef-themes)
 
   (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
-  :custom
-  (doom-modeline-height 15)
-  (doom-modeline-major-mode-color-icon t))
+    :hook (after-init . doom-modeline-mode)
+    :custom
+    (doom-modeline-height 15)
+    (doom-modeline-major-mode-color-icon t))
 #+END_SRC
 
 * Nerd icons
 
 #+begin_src emacs-lisp
   (use-package nerd-icons
-  :ensure t)
+    :ensure t)
 
-(use-package nerd-icons-completion
-  :ensure t
-  :after marginalia
-  :config
-  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+  (use-package nerd-icons-completion
+    :ensure t
+    :after marginalia
+    :config
+    (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
   (use-package nerd-icons-dired
-  :ensure t
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+    :ensure t
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
 #+end_src
 
 * Tweak UI
@@ -528,11 +528,11 @@ Handle backup files in their own directory.
 
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist '(("." . "~/.saves"))
-  kept-new-versions 10
-  kept-old-versions 10
-  version-control t
-  ;; don't ask to delete old backup versions
-  delete-old-versions t)
+        kept-new-versions 10
+        kept-old-versions 10
+        version-control t
+        ;; don't ask to delete old backup versions
+        delete-old-versions t)
   ;; avoid problems with linked files by backing up by copying
   (setq backup-by-copying t)
 #+END_SRC
@@ -586,7 +586,7 @@ Use abbrev mode.
 Make title fancier.
 
 #+BEGIN_SRC emacs-lisp
-(setq-default frame-title-format '("Emacs - " user-login-name "@" system-name " - %b"))
+  (setq-default frame-title-format '("Emacs - " user-login-name "@" system-name " - %b"))
 #+END_SRC
 
 * Winner mode
@@ -611,8 +611,8 @@ Colorizes strings that represent colors.
 
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-     :config 
-     (add-hook 'prog-mode-hook 'rainbow-mode))
+    :config 
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 
 * Deleted files go to trash
@@ -641,9 +641,9 @@ Note that we use auto-fill-mode with Markdown.
   ;; markdown-mode
   (use-package markdown-mode
     :mode (("README\\.md\\'" . gfm-mode)
-    ("README\\.markdown\\'" . gfm-mode)
-    ("\\.md\\'" . markdown-mode)
-    ("\\.markdown\\'" . markdown-mode))
+  	 ("README\\.markdown\\'" . gfm-mode)
+  	 ("\\.md\\'" . markdown-mode)
+  	 ("\\.markdown\\'" . markdown-mode))
     :init (setq markdown-command "pandoc")
     (add-hook 'markdown-mode-hook 'auto-fill-mode)
     (electric-quote-mode -1))
@@ -652,37 +652,37 @@ Note that we use auto-fill-mode with Markdown.
 * Ledger
 
 #+BEGIN_SRC emacs-lisp
-      (use-package ledger-mode
-        :init 
-        (setq ledger-clear-whole-transactions 1)
-        ;; use company-mode for auto-completion with ledger
-        :config  
-        (add-hook 'ledger-mode-hook
-                  (lambda ()
-                    (company-mode t)))
-        ;; (setq-local tab-always-indent 'complete)
-        ;; (setq-local completion-cycle-threshold t)
-        ;; (setq-local ledger-complete-in-steps t)))
-        ;; emacs mode for ledger-report-mode
-        (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-        ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
-        ;; Map some long but common accounts to function keys
-        :bind 
-        (:map ledger-mode-map 
-              ("<f5>" . "Assets:Canvas:Checking")
-              ("<f6>" . "Assets:TIAA:Checking")
-              ("<f7>" . "Assets:BanquePopulaire:Checking")
-              ("<f8>" . "€"))
-        :mode ("\\.ledger$" "\\.dat$"))
+  (use-package ledger-mode
+    :init 
+    (setq ledger-clear-whole-transactions 1)
+    ;; use company-mode for auto-completion with ledger
+    :config  
+    (add-hook 'ledger-mode-hook
+              (lambda ()
+                (company-mode t)))
+    ;; (setq-local tab-always-indent 'complete)
+    ;; (setq-local completion-cycle-threshold t)
+    ;; (setq-local ledger-complete-in-steps t)))
+    ;; emacs mode for ledger-report-mode
+    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+    ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
+    ;; Map some long but common accounts to function keys
+    :bind 
+    (:map ledger-mode-map 
+          ("<f5>" . "Assets:Canvas:Checking")
+          ("<f6>" . "Assets:TIAA:Checking")
+          ("<f7>" . "Assets:BanquePopulaire:Checking")
+          ("<f8>" . "€"))
+    :mode ("\\.ledger$" "\\.dat$"))
 
-      (use-package flycheck-ledger
-         :after (ledger-mode))
+  (use-package flycheck-ledger
+    :after (ledger-mode))
 
-      (use-package evil-ledger
-        :after (ledger-mode)
-        :config
-        (setq evil-ledger-sort-key "S")
-        (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+  (use-package evil-ledger
+    :after (ledger-mode)
+    :config
+    (setq evil-ledger-sort-key "S")
+    (add-hook 'ledger-mode-hook #'evil-ledger-mode))
 #+END_SRC
 
 * Epub
@@ -706,17 +706,17 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
     (marginalia-mode 1))
 
   (use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic ))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+    :ensure t
+    :custom
+    (completion-styles '(orderless basic ))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
 
-   (use-package consult
-     :bind (
-       ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-       ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-       ("M-s r" . consult-ripgrep)               ;; rg is faster than grep
-  ))
+  (use-package consult
+    :bind (
+  	 ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+  	 ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+  	 ("M-s r" . consult-ripgrep)               ;; rg is faster than grep
+  	 ))
 
   (use-package consult-denote
     :after denote
@@ -731,9 +731,9 @@ Combine org-roam and denote notes
   (use-package consult-notes
     :config
     (setq consult-notes-file-dir-sources
-       '(("Org Roam" ?r "~/Documents/org-roam")
-         ("Bibliographic References" ?b "~/Documents/org-roam/references")
-         ("Denote" ?d "~/Documents/Notes"))))
+  	'(("Org Roam" ?r "~/Documents/org-roam")
+  	  ("Bibliographic References" ?b "~/Documents/org-roam/references")
+  	  ("Denote" ?d "~/Documents/Notes"))))
 
 #+end_src
 
@@ -795,66 +795,66 @@ We are using company mode instead of auto-complete for now.
 Use as a dialect of Scheme compatible with the book SICP.  See https://github.com/hasu/emacs-ob-racket for installation of emacs-ob-racket.  Code is downloaded from that site and is in the elisp subdirectory of .emacs.d/
 
 #+begin_src  emacs-lisp
-;;  (use-package racket-mode)
+  ;;  (use-package racket-mode)
 #+end_src
 
 ** Swift
 
 #+BEGIN_SRC emacs-lisp
-    (use-package swift-mode)
-    ;; xcode documentation -- Doesn't work
-    ;; (use-package xcode-document-viewer
-    ;;   :load-path "~/git/emacs-xcode-document-viewer"
-    ;;   :init
-    ;;   (use-package anything
-    ;;     :ensure t)
-    ;;   :config
-    ;;   (setq xcdoc:document-path "/Applications/Xcode.app/Contents/Developer/Documentation/DocSets/com.apple.adc.documentation.docset")
-    ;;   (setq xcdoc:open-w3m-other-buffer t))
+  (use-package swift-mode)
+  ;; xcode documentation -- Doesn't work
+  ;; (use-package xcode-document-viewer
+  ;;   :load-path "~/git/emacs-xcode-document-viewer"
+  ;;   :init
+  ;;   (use-package anything
+  ;;     :ensure t)
+  ;;   :config
+  ;;   (setq xcdoc:document-path "/Applications/Xcode.app/Contents/Developer/Documentation/DocSets/com.apple.adc.documentation.docset")
+  ;;   (setq xcdoc:open-w3m-other-buffer t))
 
 
-    ;; fix for yas-snippet breaking term-mode TABS
-    ;; see https://github.com/joaotavora/yasnippet/issues/289
-    (add-hook 'term-mode-hook (lambda()
-                                (yas-minor-mode -1)))
+  ;; fix for yas-snippet breaking term-mode TABS
+  ;; see https://github.com/joaotavora/yasnippet/issues/289
+  (add-hook 'term-mode-hook (lambda()
+                              (yas-minor-mode -1)))
 
-    ;; swift-mode to use company-mode by default
-    (add-hook 'swift-mode-hook (lambda()
-                                 (company-mode t)))
-    ;; xcode-mode -- doesn't work with Xcode 8 yet
-    ;; (use-package xcode-mode
-    ;;     :load-path "~/git/xcode-mode"
-    ;;    :ensure t)
+  ;; swift-mode to use company-mode by default
+  (add-hook 'swift-mode-hook (lambda()
+                               (company-mode t)))
+  ;; xcode-mode -- doesn't work with Xcode 8 yet
+  ;; (use-package xcode-mode
+  ;;     :load-path "~/git/xcode-mode"
+  ;;    :ensure t)
 
-    ;; figure out if .h files are C or Objective C
-    ;; (add-to-list 'magic-mode-alist
-    ;; 	     `(,(lambda ()
-    ;; 		  (and (string= (file-name-extension buffer-file-name) "h")
-    ;; 		       (re-search-forward "@\\<interface\\>"
-    ;; 					  magic-mode-regexp-match-limit t)))
-    ;; 	       . objc-mode))
+  ;; figure out if .h files are C or Objective C
+  ;; (add-to-list 'magic-mode-alist
+  ;; 	     `(,(lambda ()
+  ;; 		  (and (string= (file-name-extension buffer-file-name) "h")
+  ;; 		       (re-search-forward "@\\<interface\\>"
+  ;; 					  magic-mode-regexp-match-limit t)))
+  ;; 	       . objc-mode))
   ;; From https://www.danielde.dev/blog/emacs-for-swift-development
   (defun xcode-build()
     (interactive)
     (shell-command-to-string
-      "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'build targetProject' -e 'end tell'"))
+     "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'build targetProject' -e 'end tell'"))
   (defun xcode-run()
     (interactive)
     (shell-command-to-string
-      "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'run targetProject' -e 'end tell'"))
+     "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'run targetProject' -e 'end tell'"))
   (defun xcode-test()
     (interactive)
     (shell-command-to-string
-      "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'test targetProject' -e 'end tell'"))
+     "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'test targetProject' -e 'end tell'"))
   (global-set-key (kbd "s-b") 'xcode-build)
   (global-set-key (kbd "s-r") 'xcode-run)
   (global-unset-key (kbd "s-u")) ;originally bound to revert-buffer
   (global-set-key (kbd "s-u") 'xcode-test)
 
   (defun xcode-open-current-file()
-  (interactive)
-  (shell-command-to-string
-    (concat "open -a \"/Applications/Xcode.app\" " (shell-quote-argument (buffer-file-name)))))
+    (interactive)
+    (shell-command-to-string
+     (concat "open -a \"/Applications/Xcode.app\" " (shell-quote-argument (buffer-file-name)))))
   (global-set-key (kbd "C-c p x x") 'xcode-open-current-file)
 
 
@@ -895,22 +895,22 @@ Use as a dialect of Scheme compatible with the book SICP.  See https://github.co
         (setq org-roam-directory (file-truename "~/Documents/org-roam")))
     (if (eq system-type 'windows-nt)
         (setq org-roam-directory (file-truename "z:/Documents/org-roam")))
-    ;(org-roam-setup)
+  					;(org-roam-setup)
     :bind (("C-c n l" . org-roam-buffer-toggle)
            ("C-c n f" . org-roam-node-find)
            ("C-c n i" . org-roam-node-insert))
-   :config
+    :config
     (setq org-roam-capture-templates
           '(("d" "default" plain "%?" :target
-              (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: ")
-              :unnarrowed t)
+             (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: ")
+             :unnarrowed t)
             ("r" "bibliography reference" plain "%?"
              :target
              (file+head "references/${citekey}.org" "#+title: ${title}\n")
              :unnarrowed t)))
     (setq org-roam-node-display-template
-         (concat "${title} "
-                 (propertize "${tags}" 'face 'org-tag))))
+  	(concat "${title} "
+  		(propertize "${tags}" 'face 'org-tag))))
 
   (use-package org-roam-ui
     :if (eq system-type 'darwin)
@@ -966,30 +966,30 @@ An alternative to org-roam
 
 * Org-roam-bibtex
 #+BEGIN_SRC emacs-lisp
-(use-package org-roam-bibtex
-  :if (eq system-type 'darwin)
-  :after (org-roam citar)
-  :config
-  (org-roam-bibtex-mode 1)
-  (setq orb-attached-file-extensions '("pdf" "epub")))
+  (use-package org-roam-bibtex
+    :if (eq system-type 'darwin)
+    :after (org-roam citar)
+    :config
+    (org-roam-bibtex-mode 1)
+    (setq orb-attached-file-extensions '("pdf" "epub")))
 #+END_SRC
 
 * PDF tools
 #+BEGIN_SRC emacs-lisp
-(use-package ctrlf
-  :ensure t
-  :config
-  (ctrlf-mode +1))
+  (use-package ctrlf
+    :ensure t
+    :config
+    (ctrlf-mode +1))
 
-(use-package pdf-tools
-  :after ctrlf
-  :init
-  (pdf-tools-install)
-  :config
-  (add-hook 'pdf-isearch-minor-mode-hook (lambda () (ctrlf-local-mode -1))))
+  (use-package pdf-tools
+    :after ctrlf
+    :init
+    (pdf-tools-install)
+    :config
+    (add-hook 'pdf-isearch-minor-mode-hook (lambda () (ctrlf-local-mode -1))))
 
-(use-package org-pdftools
-  :after pdf-tools
-  :hook (org-mode . org-pdftools-setup-link))
+  (use-package org-pdftools
+    :after pdf-tools
+    :hook (org-mode . org-pdftools-setup-link))
 
 #+END_SRC
