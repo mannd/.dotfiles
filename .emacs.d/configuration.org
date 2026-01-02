@@ -964,28 +964,14 @@ An alternative to org-roam
   ;;   :config (citar-org-roam-mode))
   #+END_SRC
 
-* Helm-bibtex
-
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-bibtex
-    :if (eq system-type 'darwin)
-    :config
-    (setq bibtex-completion-bibliography '("~/Documents/Bibtex/My Library.bib"))
-    (setq bibtex-completion-library-path '("~/Zotero/storage/"))
-    (setq bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool) 
-    (setq bibtex-completion-notes-path "~/Documents/org-roam/")
-    (setq bibtex-completion-pdf-field "File"))
-#+END_SRC
-
 * Org-roam-bibtex
 #+BEGIN_SRC emacs-lisp
-  (use-package org-roam-bibtex
-    :if (eq system-type 'darwin)
-    :after (org-roam helm-bibtex)
-    :config
-    (org-roam-bibtex-mode 1)
-    (setq orb-insert-interface 'helm-bibtex)
-    (setq orb-attached-file-extensions '("pdf" "epub")))
+(use-package org-roam-bibtex
+  :if (eq system-type 'darwin)
+  :after (org-roam citar)
+  :config
+  (org-roam-bibtex-mode 1)
+  (setq orb-attached-file-extensions '("pdf" "epub")))
 #+END_SRC
 
 * PDF tools
