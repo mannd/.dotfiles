@@ -3,6 +3,64 @@
 * Introduction
 This is my new /literate/ Emacs configuration file.
 
+* Document conversion functions
+#+BEGIN_SR emacs-lisp
+    # (defun my-open-docx-as-org (file)
+    #   "Select a DOCX FILE, convert it to Org with pandoc, and open the result."
+    #   (interactive "fDOCX file: ")
+    #   (let* ((buf-name (format "*docx-org: %s*" (file-name-nondirectory file)))
+    #          (buf (get-buffer-create buf-name))
+    #          (exit-code nil))
+    #     (with-current-buffer buf
+    #       (let ((inhibit-read-only t))
+    #         (erase-buffer)
+    #         (setq exit-code
+    #               (call-process "pandoc" nil t nil
+    #                             (expand-file-name file) "-t" "org" "--wrap=none"))
+    #         (unless (eq exit-code 0)
+    #           (error "Pandoc failed with exit code %s" exit-code))
+    #         (goto-char (point-min))
+    #         (org-mode)
+    #         (read-only-mode 1)
+    #         (setq-local buffer-offer-save nil)
+    #         (setq-local my-source-docx file)))
+    #     (switch-to-buffer buf)))
+    # (defun my-clean-pandoc-org-buffer ()
+    # "Normalize pandoc output in the current buffer."
+    # (goto-char (point-min))
+    # ;; Replace NBSP + normal space with one normal space.
+    # (while (search-forward (concat (string #xA0) " ") nil t)
+    #     (replace-match " " nil t))
+    # ;; Replace any remaining NBSP with normal space.
+    # (goto-char (point-min))
+    # (while (search-forward (string #xA0) nil t)
+    #     (replace-match " " nil t)))
+
+(defun my-replace-nbsp ()
+    "Replace non-breaking spaces with normal spaces in the current buffer."
+    (interactive)
+    (goto-char (point-min))
+    (while (search-forward (string #xA0) nil t)
+    (replace-match " " nil t)))
+
+    ; Note that this does not remove all \\, just those followed by blank lines.
+(defun my-clean-pandoc-org-buffer ()
+    "Normalize pandoc Org output for prose manuscripts."
+    (interactive)
+    (goto-char (point-min))
+    ;; Replace NBSP + normal space with a single normal space.
+    (while (search-forward (concat (string #xA0) " ") nil t)
+        (replace-match " " nil t))
+    ;; Replace remaining NBSP with normal spaces.
+    (goto-char (point-min))
+    (while (search-forward (string #xA0) nil t)
+        (replace-match " " nil t))
+    ;; Remove hard breaks that occur just before blank lines.
+    (goto-char (point-min))
+    (while (re-search-forward "\\\\\\\\[ \t]*\n[ \t]*\n" nil t)
+        (replace-match "\n\n" nil nil)))
+#+END_SRC
+
 * Default coding system
 
 #+BEGIN_SRC emacs-lisp
@@ -440,10 +498,13 @@ Tweak dired.
 Magit is now built-in.
 
 #+BEGIN_SRC emacs-lisp
+  (use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
+
   (require 'magit-gitflow)
   (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
   (use-package with-editor :after magit)
-  (global-set-key (kbd "C-x g") 'magit-status)
 #+END_SRC
 
 * TODO fix paths for windows Register shortcuts
