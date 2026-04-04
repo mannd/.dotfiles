@@ -101,6 +101,7 @@ This is my new /literate/ Emacs configuration file.
     :config (auto-compile-on-load-mode))
   (setq load-prefer-newer t)
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (setq package-install-upgrade-built-in t)
 
   ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
   ;; and `package-pinned-packages`. Most users will not need or want to do this.
@@ -777,6 +778,7 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
   	 ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
   	 ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
   	 ("M-s r" . consult-ripgrep)               ;; rg is faster than grep
+  	 ("C-s" . consult-line)
   	 ))
 
   (use-package consult-denote
