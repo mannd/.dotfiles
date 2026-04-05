@@ -3,64 +3,6 @@
 * Introduction
 This is my new /literate/ Emacs configuration file.
 
-* Document conversion functions
-#+BEGIN_SR emacs-lisp
-    # (defun my-open-docx-as-org (file)
-    #   "Select a DOCX FILE, convert it to Org with pandoc, and open the result."
-    #   (interactive "fDOCX file: ")
-    #   (let* ((buf-name (format "*docx-org: %s*" (file-name-nondirectory file)))
-    #          (buf (get-buffer-create buf-name))
-    #          (exit-code nil))
-    #     (with-current-buffer buf
-    #       (let ((inhibit-read-only t))
-    #         (erase-buffer)
-    #         (setq exit-code
-    #               (call-process "pandoc" nil t nil
-    #                             (expand-file-name file) "-t" "org" "--wrap=none"))
-    #         (unless (eq exit-code 0)
-    #           (error "Pandoc failed with exit code %s" exit-code))
-    #         (goto-char (point-min))
-    #         (org-mode)
-    #         (read-only-mode 1)
-    #         (setq-local buffer-offer-save nil)
-    #         (setq-local my-source-docx file)))
-    #     (switch-to-buffer buf)))
-    # (defun my-clean-pandoc-org-buffer ()
-    # "Normalize pandoc output in the current buffer."
-    # (goto-char (point-min))
-    # ;; Replace NBSP + normal space with one normal space.
-    # (while (search-forward (concat (string #xA0) " ") nil t)
-    #     (replace-match " " nil t))
-    # ;; Replace any remaining NBSP with normal space.
-    # (goto-char (point-min))
-    # (while (search-forward (string #xA0) nil t)
-    #     (replace-match " " nil t)))
-
-(defun my-replace-nbsp ()
-    "Replace non-breaking spaces with normal spaces in the current buffer."
-    (interactive)
-    (goto-char (point-min))
-    (while (search-forward (string #xA0) nil t)
-    (replace-match " " nil t)))
-
-    ; Note that this does not remove all \\, just those followed by blank lines.
-(defun my-clean-pandoc-org-buffer ()
-    "Normalize pandoc Org output for prose manuscripts."
-    (interactive)
-    (goto-char (point-min))
-    ;; Replace NBSP + normal space with a single normal space.
-    (while (search-forward (concat (string #xA0) " ") nil t)
-        (replace-match " " nil t))
-    ;; Replace remaining NBSP with normal spaces.
-    (goto-char (point-min))
-    (while (search-forward (string #xA0) nil t)
-        (replace-match " " nil t))
-    ;; Remove hard breaks that occur just before blank lines.
-    (goto-char (point-min))
-    (while (re-search-forward "\\\\\\\\[ \t]*\n[ \t]*\n" nil t)
-        (replace-match "\n\n" nil nil)))
-#+END_SRC
-
 * Default coding system
 
 #+BEGIN_SRC emacs-lisp
@@ -87,12 +29,6 @@ This is my new /literate/ Emacs configuration file.
 ~use-package~ is now part of emacs core, so no need to install it.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package ert)
-  (use-package diminish)
-  (use-package bind-key)
-  					;  (require 'ert)
-  					; (require 'diminish)
-  					; (require 'bind-key)
   ;; Ensure all packages are loaded
   (setq use-package-always-ensure t)
   (setq use-package-verbose t)
@@ -100,12 +36,11 @@ This is my new /literate/ Emacs configuration file.
   (use-package auto-compile
     :config (auto-compile-on-load-mode))
   (setq load-prefer-newer t)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   (setq package-install-upgrade-built-in t)
 
-  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-  ;; and `package-pinned-packages`. Most users will not need or want to do this.
-  ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+  (use-package ert)
+  (use-package diminish)
+  (use-package bind-key)
 #+END_SRC
 
 * Custom file
@@ -115,11 +50,6 @@ Customizations get stored in their own file.  I have arranged this so that there
 #+BEGIN_SRC emacs-lisp
   ;; customizations in its own file.  
   (setq custom-file (expand-file-name "custom.el" "~/.emacs.d"))
-  ;; (if (eq system-type 'darwin)
-  ;;   (setq custom-file (expand-file-name "custom.el" emacs-folder)))
-  ;; (if (eq system-type 'windows-nt)
-  ;;   (setq custom-file "/msys64/home/mannd/.emacs.d/custom.el"))
-  (load custom-file 'noerror)
 #+END_SRC
 
 * Start Emacs server automatically
@@ -192,8 +122,6 @@ Only used in macOS?
 Set some global keys for org mode, set up my default org directory and tweak the appearance of org mode.
 
 #+BEGIN_SRC emacs-lisp
-  ;; org-mode setup
-  (require 'org)
   ;; Standard org key bindings
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
@@ -508,6 +436,15 @@ Magit is now built-in.
   (use-package with-editor :after magit)
 #+END_SRC
 
+* Project
+I use built-in Project as opposed to Projectile now.
+
+#+begin_src elisp
+(with-eval-after-load 'project
+  (define-key project-prefix-map "m" #'magit-project-status)
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
+#+end_src
+
 * TODO fix paths for windows Register shortcuts
 
 #+BEGIN_SRC emacs-lisp
@@ -528,9 +465,7 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   ;;(load-theme 'light-blue t)
   ;;(load-theme 'leuven t)
   (use-package modus-themes
-    :ensure t
-    :config
-    (load-theme 'modus-vivendi-tinted))
+    :ensure t)
 
   (use-package doric-themes
     :ensure t)
@@ -800,7 +735,7 @@ Combine org-roam and denote notes
 
 #+end_src
 
-* Auto-complete
+* Auto-complet134.07e
 We are using company mode instead of auto-complete for now.
 
 * Misc packages
@@ -1056,3 +991,66 @@ An alternative to org-roam
     :hook (org-mode . org-pdftools-setup-link))
 
 #+END_SRC
+* Document conversion functions
+#+BEGIN_SR emacs-lisp
+    # (defun my-open-docx-as-org (file)
+    #   "Select a DOCX FILE, convert it to Org with pandoc, and open the result."
+    #   (interactive "fDOCX file: ")
+    #   (let* ((buf-name (format "*docx-org: %s*" (file-name-nondirectory file)))
+    #          (buf (get-buffer-create buf-name))
+    #          (exit-code nil))
+    #     (with-current-buffer buf
+    #       (let ((inhibit-read-only t))
+    #         (erase-buffer)
+    #         (setq exit-code
+    #               (call-process "pandoc" nil t nil
+    #                             (expand-file-name file) "-t" "org" "--wrap=none"))
+    #         (unless (eq exit-code 0)
+    #           (error "Pandoc failed with exit code %s" exit-code))
+    #         (goto-char (point-min))
+    #         (org-mode)
+    #         (read-only-mode 1)
+    #         (setq-local buffer-offer-save nil)
+    #         (setq-local my-source-docx file)))
+    #     (switch-to-buffer buf)))
+    # (defun my-clean-pandoc-org-buffer ()
+    # "Normalize pandoc output in the current buffer."
+    # (goto-char (point-min))
+    # ;; Replace NBSP + normal space with one normal space.
+    # (while (search-forward (concat (string #xA0) " ") nil t)
+    #     (replace-match " " nil t))
+    # ;; Replace any remaining NBSP with normal space.
+    # (goto-char (point-min))
+    # (while (search-forward (string #xA0) nil t)
+    #     (replace-match " " nil t)))
+
+(defun my-replace-nbsp ()
+    "Replace non-breaking spaces with normal spaces in the current buffer."
+    (interactive)
+    (goto-char (point-min))
+    (while (search-forward (string #xA0) nil t)
+    (replace-match " " nil t)))
+
+    ; Note that this does not remove all \\, just those followed by blank lines.
+(defun my-clean-pandoc-org-buffer ()
+    "Normalize pandoc Org output for prose manuscripts."
+    (interactive)
+    (goto-char (point-min))
+    ;; Replace NBSP + normal space with a single normal space.
+    (while (search-forward (concat (string #xA0) " ") nil t)
+        (replace-match " " nil t))
+    ;; Replace remaining NBSP with normal spaces.
+    (goto-char (point-min))
+    (while (search-forward (string #xA0) nil t)
+        (replace-match " " nil t))
+    ;; Remove hard breaks that occur just before blank lines.
+    (goto-char (point-min))
+    (while (re-search-forward "\\\\\\\\[ \t]*\n[ \t]*\n" nil t)
+        (replace-match "\n\n" nil nil)))
+#+END_SRC
+* Load custom file
+
+#+begin_src emacs
+  (load-theme 'modus-vivendi-tinted)
+  (load custom-file 'noerror)
+#+end_src
