@@ -25,6 +25,18 @@
 (require 'ob-tangle)
 
 ;; Load my literate Emacs configuration.
+(setq package-enable-at-startup nil)
+(require 'package)
+
+(setq package-archives
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")))
+
+(package-initialize)
+
+(require 'org)
+(require 'ob-tangle)
+
 (org-babel-load-file "~/.emacs.d/configuration.org")
 
 ;; Finish timing the startup.

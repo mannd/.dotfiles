@@ -43,80 +43,6 @@ This is my new /literate/ Emacs configuration file.
   (use-package bind-key)
 #+END_SRC
 
-* Custom file
-
-Customizations get stored in their own file.  I have arranged this so that there is a separate init.el and configuration.org for Mac and Windows.  I considered pointing init.el to the same file, but thought it best to separate the two systems, other than certain shared files like the org files.
-
-#+BEGIN_SRC emacs-lisp
-  ;; customizations in its own file.  
-  (setq custom-file (expand-file-name "custom.el" "~/.emacs.d"))
-#+END_SRC
-
-* Start Emacs server automatically
-
-#+BEGIN_SRC emacs-lisp
-  ;; Start Emacs server if not already running
-  (require 'server)
-  (unless (server-running-p)
-    (server-start))
-
-  ;; Automatically kill buffers opened by emacsclient, but only if unmodified
-  (setq server-kill-new-buffers t)
-
-  ;; Keep the usual save-confirmation behavior
-  (setq server-kill-buffer-query-function 'server-kill-buffer-query-function)
-
-  ;; Ensure we do NOT disable save prompts
-  ;; (so don't remove server-kill-buffer-query-function from hooks)
-#+END_SRC
-
-* Define function key as hyper
-Not sure if this only applies to macOS?
-
-#+BEGIN_SRC emacs-lisp
-  (setq ns-function-modifier 'hyper)
-#+END_SRC
-
-* Windmove
-However S-<arrow> conflicts with calendar in org-mode.  So use the super key (Command in macOS) but only in macOS.  Windows uses the Windows key for other functions, so just don't use windmove with Windows.
-
-#+BEGIN_SRC emacs-lisp
-  (if (eq system-type 'darwin) (windmove-default-keybindings 'super))
-  					; But also retain these old keybindings I am used to.
-  (global-set-key (kbd "C-x C-n") 'other-window)
-  (global-set-key (kbd "C-x C-p") 'previous-multiframe-window)
-#+END_SRC
-
-* Printing
-
-Printing is only set up for mac.
-
-#+BEGIN_SRC emacs-lisp
-  (if (eq system-type 'darwin)
-      (progn
-        (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
-        (when (require 'mac-print-mode nil t)
-  	(mac-print-mode 1))))
-  ;; (global-set-key (kbd "M-p") 'mac-print-buffer)))
-#+END_SRC
-
-* Get path right, takes it from the shell
-Only used in macOS?
-
-#+BEGIN_SRC emacs-lisp
-  ;; new and improved way to make PATH and exec-path match bash config
-  ;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
-  ;; it looks like it would prefer using .profile, so below I
-  ;; disable the error message that occurs.
-  (use-package exec-path-from-shell
-    :init
-    (setq exec-path-from-shell-check-startup-files nil)
-    :config
-    (when (memq window-system '(mac ns))
-      (exec-path-from-shell-initialize)))
-
-#+END_SRC
-
 * Org mode
 ** Setup org mode
 Set some global keys for org mode, set up my default org directory and tweak the appearance of org mode.
@@ -190,77 +116,92 @@ Set up the org agenda.
 ** More org stuff
 
 #+BEGIN_SRC emacs-lisp
-  ;;(add-to-list 'load-path "~/.emacs.d/elisp/emacs-ob-racket-master")
-  ;;(require 'ob-racket)
+    ;;(add-to-list 'load-path "~/.emacs.d/elisp/emacs-ob-racket-master")
+    ;;(require 'ob-racket)
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (C . t)
-     (js . t)
-     (shell . t)
-     (java . t)))
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (C . t)
+       (js . t)
+       (shell . t)
+       (java . t)))
 
-  ;; file types for org-mode
-  (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
+    ;; file types for org-mode
+    ;; I am no longer opening .txt files in org mode.
+    ;; (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 
-  ;; refile targets
-  (setq org-refile-targets
-        '((org-agenda-files :maxlevel . 2)))
+    ;; However, we will temporarily open txt files ;; in org format in org-mode
+  ;;   (defun my/txt-file-maybe-org ()
+  ;;   (when (and buffer-file-name
+  ;;              (string-match-p "\\.txt\\'" buffer-file-name)
+  ;;              (not (derived-mode-p 'org-mode)))
+  ;;     (save-excursion
+  ;;       (goto-char (point-min))
+  ;;       (when (re-search-forward "^\\*+ " nil t)
+  ;;         (org-mode)
+  ;;         (message "This .txt file looks like an Org file; consider renaming it to .org: %s"
+  ;;                  (file-name-nondirectory buffer-file-name))))))
 
-  ;; default tasks/notes/inbox file
-  (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
+  ;; (add-hook 'find-file-hook #'my/txt-file-maybe-org)
 
-  ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
-  (setq org-stuck-projects '("+project/-DONE-CANCELLED" ("NEXT") nil ""))
-  (setq org-tags-exclude-from-inheritance '("project"))
-  ;; Capture templates - set up just for macOS
-  (setq org-capture-templates
-        '(("t" "todo" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-           "* TODO %?\n%U\n%a\n")
-          ("n" "note" entry (file+headline "~/Dropbox/org/inbox.org" "Notes")
-           "* %? :NOTE:\n%U\n%a\n")
-          ("j" "journal entry"
-           entry (file+olp+datetree "~/Documents/journal.org.gpg")
-           "**** %U %^{Title}\n%?")
-          ("g" "German vocabulary"
-           entry (file+headline "~/Dropbox/org/german.org" "German")
-           "* <[%^{German word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** German\n %^{Detailed German word|%\\1}\n** English\n %^{English translation}")
-          ("f" "French vocabulary"
-           entry (file+headline "~/Dropbox/org/french.org" "French")
-           "* <[%^{French word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** French\n %^{Detailed French word|%\\1}\n** English\n %^{English translation}")))
+    ;; refile targets
+    (setq org-refile-targets
+          '((org-agenda-files :maxlevel . 2)))
 
-  ;; more TODO states
-  (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-                (sequence "PENDING(p)" "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+    ;; default tasks/notes/inbox file
+    (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
 
-  ;; pretty todo colors
-  (setq org-todo-keyword-faces
-        (quote (("NEXT" :foreground "blue" :weight bold)
-                ("DONE" :foreground "forest green" :weight bold)
-                ("WAITING" :foreground "orange" :weight bold)
-                ("PENDING" :foreground "orange" :weight bold)
-                ("HOLD" :foreground "magenta" :weight bold)
-                ("CANCELLED" :foreground "forest green" :weight bold)
-                ("SOMEDAY" :foreground "cyan" :weight bold))))
+    ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
+    (setq org-stuck-projects '("+project/-DONE-CANCELLED" ("NEXT") nil ""))
+    (setq org-tags-exclude-from-inheritance '("project"))
+    ;; Capture templates - set up just for macOS
+    (setq org-capture-templates
+          '(("t" "todo" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
+             "* TODO %?\n%U\n%a\n")
+            ("n" "note" entry (file+headline "~/Dropbox/org/inbox.org" "Notes")
+             "* %? :NOTE:\n%U\n%a\n")
+            ("j" "journal entry"
+             entry (file+olp+datetree "~/Documents/journal.org.gpg")
+             "**** %U %^{Title}\n%?")
+            ("g" "German vocabulary"
+             entry (file+headline "~/Dropbox/org/german.org" "German")
+             "* <[%^{German word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** German\n %^{Detailed German word|%\\1}\n** English\n %^{English translation}")
+            ("f" "French vocabulary"
+             entry (file+headline "~/Dropbox/org/french.org" "French")
+             "* <[%^{French word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** French\n %^{Detailed French word|%\\1}\n** English\n %^{English translation}")))
 
-  ;; activate org mode speed commands
-  (setq org-use-speed-commands t)
+    ;; more TODO states
+    (setq org-todo-keywords
+          (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+                  (sequence "PENDING(p)" "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
-  ;; log stuff into drawer
-  (setq org-log-done (quote time))
-  (setq org-log-into-drawer "LOGBOOK")
-  (setq org-clock-into-drawer 1)
+    ;; pretty todo colors
+    (setq org-todo-keyword-faces
+          (quote (("NEXT" :foreground "blue" :weight bold)
+                  ("DONE" :foreground "forest green" :weight bold)
+                  ("WAITING" :foreground "orange" :weight bold)
+                  ("PENDING" :foreground "orange" :weight bold)
+                  ("HOLD" :foreground "magenta" :weight bold)
+                  ("CANCELLED" :foreground "forest green" :weight bold)
+                  ("SOMEDAY" :foreground "cyan" :weight bold))))
 
-  ;; avoid blank lines in org files
-  (setq org-cycle-separator-lines 0)
+    ;; activate org mode speed commands
+    (setq org-use-speed-commands t)
 
-  ;; supress footer in org html export files
-  (setq org-html-postamble nil)
+    ;; log stuff into drawer
+    (setq org-log-done (quote time))
+    (setq org-log-into-drawer "LOGBOOK")
+    (setq org-clock-into-drawer 1)
 
-  ;; widen margins in Latex export
-  (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil)))
+    ;; avoid blank lines in org files
+    (setq org-cycle-separator-lines 0)
+
+    ;; supress footer in org html export files
+    (setq org-html-postamble nil)
+
+    ;; widen margins in Latex export
+    (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil)))
 #+END_SRC
 
 ** org-bullets
@@ -282,6 +223,84 @@ Note that this requires emacs build with imagemagick.
 
 #+BEGIN_SRC emacs-lisp
   (setq org-image-actual-width nil)
+#+END_SRC
+
+* Custom file
+
+Customizations get stored in their own file.  I have arranged this so that there is a separate init.el and configuration.org for Mac and Windows.  I considered pointing init.el to the same file, but thought it best to separate the two systems, other than certain shared files like the org files.
+
+#+BEGIN_SRC emacs-lisp
+  ;; customizations in its own file.  
+  (setq custom-file (expand-file-name "custom.el" "~/.emacs.d"))
+  ;; (if (eq system-type 'darwin)
+  ;;   (setq custom-file (expand-file-name "custom.el" emacs-folder)))
+  ;; (if (eq system-type 'windows-nt)
+  ;;   (setq custom-file "/msys64/home/mannd/.emacs.d/custom.el"))
+#+END_SRC
+
+* Start Emacs server automatically
+
+#+BEGIN_SRC emacs-lisp
+  ;; Start Emacs server if not already running
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+
+  ;; Automatically kill buffers opened by emacsclient, but only if unmodified
+  (setq server-kill-new-buffers t)
+
+  ;; Keep the usual save-confirmation behavior
+  (setq server-kill-buffer-query-function 'server-kill-buffer-query-function)
+
+  ;; Ensure we do NOT disable save prompts
+  ;; (so don't remove server-kill-buffer-query-function from hooks)
+#+END_SRC
+
+* Define function key as hyper
+Not sure if this only applies to macOS?
+
+#+BEGIN_SRC emacs-lisp
+  (setq ns-function-modifier 'hyper)
+#+END_SRC
+
+* Windmove
+However S-<arrow> conflicts with calendar in org-mode.  So use the super key (Command in macOS) but only in macOS.  Windows uses the Windows key for other functions, so just don't use windmove with Windows.
+
+#+BEGIN_SRC emacs-lisp
+  (if (eq system-type 'darwin) (windmove-default-keybindings 'super))
+  					; But also retain these old keybindings I am used to.
+  (global-set-key (kbd "C-x C-n") 'other-window)
+  (global-set-key (kbd "C-x C-p") 'previous-multiframe-window)
+#+END_SRC
+
+* Printing
+
+Printing is only set up for mac.
+
+#+BEGIN_SRC emacs-lisp
+  (if (eq system-type 'darwin)
+      (progn
+        (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
+        (when (require 'mac-print-mode nil t)
+  	(mac-print-mode 1))))
+  ;; (global-set-key (kbd "M-p") 'mac-print-buffer)))
+#+END_SRC
+
+* Get path right, takes it from the shell
+Only used in macOS?
+
+#+BEGIN_SRC emacs-lisp
+  ;; new and improved way to make PATH and exec-path match bash config
+  ;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
+  ;; it looks like it would prefer using .profile, so below I
+  ;; disable the error message that occurs.
+  (use-package exec-path-from-shell
+    :init
+    (setq exec-path-from-shell-check-startup-files nil)
+    :config
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize)))
+
 #+END_SRC
 
 * Ediff
@@ -358,7 +377,7 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     (evil-set-initial-state 'Info-mode 'emacs)
     ;; (evil-set-initial-state 'image-dired-mode 'emacs)
     ;; (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)
-    ;; (evil-set-initial-state 'eww-mode 'emacs)
+    (evil-set-initial-state 'eww-mode 'emacs)
     ;; (evil-set-initial-state 'cider-repl 'emacs)
     ;; (evil-set-initial-state 'cider-error 'emacs)
     ;; (evil-set-initial-state 'deft-mode 'emacs)
@@ -424,7 +443,6 @@ Tweak dired.
 #+END_SRC
 
 * Magit
-Magit is now built-in.
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit
@@ -437,12 +455,14 @@ Magit is now built-in.
 #+END_SRC
 
 * Project
-I use built-in Project as opposed to Projectile now.
 
-#+begin_src elisp
-(with-eval-after-load 'project
-  (define-key project-prefix-map "m" #'magit-project-status)
+#+begin_src emacs-lisp
+  (with-eval-after-load 'project
+  (define-key project-prefix-map "m" #'magit-project-status))
+
+  (with-eval-after-load 'project
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
+
 #+end_src
 
 * TODO fix paths for windows Register shortcuts
@@ -465,7 +485,9 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   ;;(load-theme 'light-blue t)
   ;;(load-theme 'leuven t)
   (use-package modus-themes
-    :ensure t)
+    :ensure t
+    :config
+    (load-theme 'modus-vivendi-tinted t))
 
   (use-package doric-themes
     :ensure t)
@@ -991,66 +1013,8 @@ An alternative to org-roam
     :hook (org-mode . org-pdftools-setup-link))
 
 #+END_SRC
-* Document conversion functions
-#+BEGIN_SR emacs-lisp
-    # (defun my-open-docx-as-org (file)
-    #   "Select a DOCX FILE, convert it to Org with pandoc, and open the result."
-    #   (interactive "fDOCX file: ")
-    #   (let* ((buf-name (format "*docx-org: %s*" (file-name-nondirectory file)))
-    #          (buf (get-buffer-create buf-name))
-    #          (exit-code nil))
-    #     (with-current-buffer buf
-    #       (let ((inhibit-read-only t))
-    #         (erase-buffer)
-    #         (setq exit-code
-    #               (call-process "pandoc" nil t nil
-    #                             (expand-file-name file) "-t" "org" "--wrap=none"))
-    #         (unless (eq exit-code 0)
-    #           (error "Pandoc failed with exit code %s" exit-code))
-    #         (goto-char (point-min))
-    #         (org-mode)
-    #         (read-only-mode 1)
-    #         (setq-local buffer-offer-save nil)
-    #         (setq-local my-source-docx file)))
-    #     (switch-to-buffer buf)))
-    # (defun my-clean-pandoc-org-buffer ()
-    # "Normalize pandoc output in the current buffer."
-    # (goto-char (point-min))
-    # ;; Replace NBSP + normal space with one normal space.
-    # (while (search-forward (concat (string #xA0) " ") nil t)
-    #     (replace-match " " nil t))
-    # ;; Replace any remaining NBSP with normal space.
-    # (goto-char (point-min))
-    # (while (search-forward (string #xA0) nil t)
-    #     (replace-match " " nil t)))
 
-(defun my-replace-nbsp ()
-    "Replace non-breaking spaces with normal spaces in the current buffer."
-    (interactive)
-    (goto-char (point-min))
-    (while (search-forward (string #xA0) nil t)
-    (replace-match " " nil t)))
-
-    ; Note that this does not remove all \\, just those followed by blank lines.
-(defun my-clean-pandoc-org-buffer ()
-    "Normalize pandoc Org output for prose manuscripts."
-    (interactive)
-    (goto-char (point-min))
-    ;; Replace NBSP + normal space with a single normal space.
-    (while (search-forward (concat (string #xA0) " ") nil t)
-        (replace-match " " nil t))
-    ;; Replace remaining NBSP with normal spaces.
-    (goto-char (point-min))
-    (while (search-forward (string #xA0) nil t)
-        (replace-match " " nil t))
-    ;; Remove hard breaks that occur just before blank lines.
-    (goto-char (point-min))
-    (while (re-search-forward "\\\\\\\\[ \t]*\n[ \t]*\n" nil t)
-        (replace-match "\n\n" nil nil)))
-#+END_SRC
-* Load custom file
-
-#+begin_src emacs
-  (load-theme 'modus-vivendi-tinted)
-  (load custom-file 'noerror)
+* Custom file loading
+#+begin_src emacs-lisp
+    (load custom-file)
 #+end_src
