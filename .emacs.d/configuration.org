@@ -884,7 +884,6 @@ Use as a dialect of Scheme compatible with the book SICP.  See https://github.co
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :config
-    (add-hook 'prog-mode-hook 'company-mode)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
     (define-key company-active-map (kbd "C-p") #'company-select-previous)
     (setq company-transformers '(company-sort-by-occurrence)))
