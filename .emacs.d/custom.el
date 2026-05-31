@@ -29,7 +29,8 @@
 	 track-changes tramp treemacs-icons-dired undo-fu undo-tree
 	 verilog-mode vertico visual-fill-column which-key
 	 window-tool-bar workgroups xcode-mode yaml-mode yasnippet
-	 zenburn-theme zetteldeft)))
+	 zenburn-theme zetteldeft))
+ '(safe-local-variable-values '((eval activate-input-method 'french-prefix))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -67,6 +67,13 @@ Set some global keys for org mode, set up my default org directory and tweak the
 
   (use-package org-appear
     :hook (org-mode . org-appear-mode))
+
+  ;; remap TAB key if running in terminal mode
+  (if (display-graphic-p)
+      (message "running in graphic UI")
+    (add-hook 'org-mode-hook                                                                      
+          (lambda ()                                                                          
+        (define-key evil-normal-state-map (kbd "TAB") 'org-cycle))))
 #+END_SRC
 
 *** TODO Consider moving org files to iCloud
@@ -97,16 +104,16 @@ Set up the org agenda.
                            "org.org"))
   ;; custom agenda commands
   ;; see https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
-  (setq org-agenda-custom-commands
-        '(("p" "Projects" tags "project/TODO" nil)
-          ("n" "Agenda and TODOs"
-           ((agenda "")
-            (alltodo "")))
-          ("c" "Agenda and Projects"
-           ((agenda "")
-            (tags "project/TODO"
-                  ((org-agenda-overriding-header "Projects")))))
-          ))
+  ;; (setq org-agenda-custom-commands
+  ;;       '(("p" "Projects" tags "project/TODO" nil)
+  ;;         ("n" "Agenda and TODOs"
+  ;;          ((agenda "")
+  ;;           (alltodo "")))
+  ;;         ("c" "Agenda and Projects"
+  ;;          ((agenda "")
+  ;;           (tags "project/TODO"
+  ;;                 ((org-agenda-overriding-header "Projects")))))
+  ;;         ))
 
   ;; change default iCalendar target (org.ics conflicts with org.org file)
   (setq org-icalendar-combined-agenda-file (expand-file-name "org-calendar.ics" org-directory))
@@ -273,6 +280,37 @@ However S-<arrow> conflicts with calendar in org-mode.  So use the super key (Co
   (global-set-key (kbd "C-x C-p") 'previous-multiframe-window)
 #+END_SRC
 
+* Misc tweaks
+From [[https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/][Bozhidar Batsov]].
+
+#+begin_src emacs-lisp
+  ;; Disable right-to-left language support, which speeds buffer drawing
+  (setq-default bidi-display-reordering 'left-to-right
+                bidi-paragraph-direction 'left-to-right)
+  (setq bidi-inhibit-bpa t)
+
+  (setq redisplay-skip-fontification-on-input t)
+
+  ;; leave cursor in help-buffer
+  (setq help-window-select t)
+
+  (setq save-place-mode t)
+
+  ;; Have C-x 1 toggle between single window and restoring previous window layout.
+  (winner-mode +1)
+
+  (defun toggle-delete-other-windows ()
+    "Delete other windows in frame if any, or restore previous window config."
+    (interactive)
+    (if (and winner-mode
+             (equal (selected-window) (next-window)))
+        (winner-undo)
+      (delete-other-windows)))
+
+  (global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
+
+#+end_src
+
 * Printing
 
 Printing is only set up for mac.
@@ -355,49 +393,57 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
-    :init
-    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-    (setq evil-want-keybinding nil)
-    ;; Make C-u in evil-mode works like in vim (page up)
-    ;; must be set before package is loaded
-    (setq evil-want-C-u-scroll t)
-    (setq evil-undo-system 'undo-redo)
-    :config
-    ;; Make movement keys work respect visual lines
-    (evil-mode 1)
-    (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-    (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-    (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-    (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-    (setq evil-search-module 'evil-search)
-    (setq-default evil-cross-lines t)
-    ;; git commit buffers start in insert mode
-    (evil-set-initial-state 'git-commit-mode 'insert)
-    (evil-set-initial-state 'dired-mode 'emacs)
-    (evil-set-initial-state 'Info-mode 'emacs)
-    ;; (evil-set-initial-state 'image-dired-mode 'emacs)
-    ;; (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)
-    (evil-set-initial-state 'eww-mode 'emacs)
-    ;; (evil-set-initial-state 'cider-repl 'emacs)
-    ;; (evil-set-initial-state 'cider-error 'emacs)
-    ;; (evil-set-initial-state 'deft-mode 'emacs)
-    ;; (evil-set-initial-state 'semantic-symref-results-mode 'emacs)
-    (evil-set-initial-state 'diff-mode 'emacs)
-    (evil-set-initial-state 'ledger-reconcile-mode 'emacs)
-    (evil-set-initial-state 'image-mode 'emacs)
-    ;; (add-to-list 'evil-emacs-state-modes 'forecast-mode)
-    (setq-default evil-cross-lines t))
-
-  ;; Tries to apply evil mode to most non-text buffers
-  ;; However, there are too many conflicts with emacs keybindings
-  ;; in these states that I end up switching to emacs mode.
-  ;; Thus, disabled.
-  (use-package evil-collection
-    :disabled t
-    :after evil
     :ensure t
+    
+    :init
+    (setq evil-want-integration t) 
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t) ;; Make C-u work like in vim (page up)
+    (setq evil-undo-system 'undo-redo)
+    
     :config
-    (evil-collection-init))
+    (evil-mode 1)
+    
+    ;; Make movement keys respect visual lines
+    (define-key evil-normal-state-map [remap evil-next-line] #'evil-next-visual-line)
+    (define-key evil-normal-state-map [remap evil-previous-line]  #'evil-previous-visual-line)
+    (define-key evil-motion-state-map [remap evil-next-line] #'evil-next-visual-line)
+    (define-key evil-motion-state-map [remap evil-previous-line]  #'evil-previous-visual-line)
+    
+    (setq evil-search-module 'evil-search)
+    
+    (setq-default evil-cross-lines t)
+
+    ;; Text-editing modes: use Evil.
+    (dolist (mode '(text-mode
+                    prog-mode
+                    org-mode
+                    conf-mode))
+      (evil-set-initial-state mode 'normal))
+
+    ;; Emacs application/interface modes: use native bindings.
+    (dolist (mode '(dired-mode
+                    magit-status-mode
+                    magit-log-mode
+                    magit-diff-mode
+                    magit-revision-mode
+                    Info-mode
+                    help-mode
+                    custom-mode
+                    package-menu-mode
+                    ibuffer-mode
+                    occur-mode
+                    compilation-mode
+                    grep-mode
+  		  eww-mode
+  		  cider-repl-mode
+  		  diff-mode
+  		  ledger-reconcile-mode
+  		  image-mode
+                    org-agenda-mode))
+      (evil-set-initial-state mode 'emacs)))
+
+  ;; I have abandoned evil-collection and have deleted the package
 
   ;; use evil-matchit to match tags
   (use-package evil-matchit
@@ -414,12 +460,10 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
   (use-package evil-org
     :after (evil org)
     :config
-    (require 'evil-org-agenda)
     (add-hook 'org-mode-hook 'evil-org-mode)
     (add-hook 'evil-org-mode-hook
               (lambda ()
-                (evil-org-set-key-theme)))
-    (evil-org-agenda-set-keys))
+                (evil-org-set-key-theme))))
 
 #+END_SRC
 
@@ -702,6 +746,7 @@ Note that we use auto-fill-mode with Markdown.
     :config
     (setq evil-ledger-sort-key "S")
     (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+
 #+END_SRC
 
 * Epub
